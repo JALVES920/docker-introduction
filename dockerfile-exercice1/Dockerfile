@@ -1,4 +1,4 @@
-FROM node:24.18-alpine
+FROM node:slim
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY src ./src
