@@ -1,12 +1,30 @@
-
-# Identique que
-# $ docker run --name dozzle -d --volume=/var/run/docker.sock:/var/run/docker.sock:ro -p 8888:8080 ftutorials/dozzle
-
 services:
-  dozzle:
-    container_name: dozzle
-    image: ftutorials/dozzle
+  postgres:
+    image: postgres:16
+    container_name: drupal-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: drupal_pwd
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - postgres-data:/var/lib/postgresql/data
+
+  drupal:
+    image: drupal:10-apache
+    container_name: drupal
+    restart: unless-stopped
     ports:
-      - 8888:8080
+      - "8081:80"
+    depends_on:
+      - postgres
+    volumes:
+      - drupal-modules:/var/www/html/modules
+      - drupal-profiles:/var/www/html/profiles
+      - drupal-themes:/var/www/html/themes
+      - drupal-sites:/var/www/html/sites
+
+volumes:
+  postgres-data:
+  drupal-modules:
+  drupal-profiles:
+  drupal-themes:
+  drupal-sites:
